@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Star Wars Urban</title>
+    <link
+      rel="icon"
+      type="image/jpg"
+      href="http://assets.stickpng.com/images/602bb8655c5b2300043add95.png"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <style>
+      body {
+        background-color: rgb(17, 11, 11);
+      }
+      input[type="text"] {
+        padding: 6px;
+        border: none;
+        margin-top: 8px;
+        margin-right: 16px;
+        font-size: 17px;
+      }
+      button {
+        padding: 6px 10px;
+        border-radius: 20px;
+        background: yellow;
+        font-size: 17px;
+        border: none;
+        cursor: pointer;
+      }
+      #show {
+        width: 100%;
+        overflow: hidden;
+        background-color: rgb(45, 47, 48);
+        color: rgb(159, 160, 136);
+        border-radius: 25px;
+      }
+      .main_div {
+        margin: auto;
+        max-width: 40%;
+        background-color: rgb(45, 47, 48);
+        color: rgb(159, 160, 136);
+        border-radius: 25px;
+      }
+      input {
+        border: none;
+        width: 85%;
+        margin-left: 11px;
+        background-color: rgb(45, 47, 48);
+        color: rgb(159, 160, 136);
+      }
+      input:focus {
+        outline: none;
+      }
+      .img_div {
+        width: 24%;
+        margin: auto;
+      }
+      img {
+        margin-left: 40px;
+        height: 150px;
+      }
+      .showing:hover {
+        background-color: yellow;
+        color: black;
+        border-radius: 7px;
+        font-weight: bold;
+        width: 90%;
+        border: 1px solid black;
+      }
+      .showing {
+        height: 25px;
+        margin-left: 10px;
+        width: 90%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="img_div">
+      <img
+        src="http://assets.stickpng.com/images/602bb8655c5b2300043add95.png"
+      />
+    </div>
+    <div class="main_div">
+      <input
+        oninput="throttle()"
+        type="text"
+        placeholder="Search By Name"
+        id="in"
+      />
+      <button onclick="throttle()" type="submit">
+        <i class="fa fa-search"></i>
+      </button>
+      <p style="border: 1px solid black"></p>
+      <div id="show"></div>
+    </div>
+  </body>
+</html>
+
+<script>
+  let show = document.getElementById("show");
+  var timerId;
+  async function star() {
+    let value = document.getElementById("in").value;
+    if (value.length == 0) {
+      return false;
+    }
+    let char = await fetch(`https://swapi.dev/api/people/?search=${value}`);
+    let data = await char.json();
+    // console.log(data.results);
+    console.log(data);
+
+    return data.results;
+  }
+  function throttle() {
+    if (timerId) {
+      return false;
+    }
+    timerId = setTimeout(() => {
+      main();
+      timerId = undefined;
+    }, 500);
+    // console.log(timerId);
+  }
+  function shows(d) {
+    show.innerHTML = null;
+    d.forEach(({ name }) => {
+      let div1 = document.createElement("div");
+      div1.className = "showing";
+      div1.innerHTML = name;
+
+      show.append(div1);
+    });
+  }
+  async function main() {
+    let s = await star();
+    // console.log(s);
+    shows(s);
+  }
+</script>
